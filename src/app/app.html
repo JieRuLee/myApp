@@ -1,22 +1,82 @@
 <section>
   <header>
     <h1>{{title}}</h1>
-    <input class="new-todo" #todoInput (keyup)="add($event, todoInput)" [placeholder]="placeholder" autofocus>
+    <input 
+        #todoInput 
+        class="new-todo" 
+        (keyup.enter)="add(todoInput.value); 
+        todoInput.value = ''"
+        [placeholder]="placeholder" 
+        (mouseenter)="todoInput.focus()"
+        autofocus>
   </header>
   <section>
-    <input id="toggle-all" type="checkbox" [checked]="toggleAllBtn" (click)="toggleAll()">
-    <label for="toggle-all">Mark all as complete
+    <input 
+        id="toggle-all" 
+        type="checkbox" 
+        [checked]="toggleAllBtn" 
+        (click)="toggleAll()">
+    <label for="toggle-all">
+      Mark all as complete
     </label>
     <ul>
-      @for (item of todoDataList; track $index) {
-      <li [class]="{completed: item.Status, smallTest: item.Status}">
+      @for (item of nowToddoList; track $index) {
+      <li 
+        [class]="{
+          completed: item.Status,
+          smallTest: item.Status
+          }">
         <div>
-          <input type="checkbox" [checked]="item.Status" (click)="clickCheck(item)">
-          <label>{{item.Thing}}</label>
-          <button (click)="delete($index)">⨷</button>
+          <input 
+            type="checkbox" 
+            [checked]="item.Status" 
+            (click)="clickCheck(item)">
+          <label 
+            (dblclick)="edit(item)">
+              {{item.Thing}}
+            </label>
+          <button  
+            (click)="delete(item)">
+              ⨷
+          </button>
         </div>
       </li>
+      @if (item.Editing) {
+      <input  
+            #ItemInput
+            [value]="item.Thing"
+            (keyup.enter)="update(item, ItemInput.value)"
+            (blur)="update(item, ItemInput.value)"
+            (mouseenter)="ItemInput.focus()"
+            type="text"
+          />
+        }
       }
+
     </ul>
   </section>
+  <footer>
+    <span> <strong>{{todoActive.length}}</strong> items left</span>
+    <ul>
+      <li>
+        <a [class.selected]="nowTodoStatusType === TodoStatusType.All"
+           (click)="setTodoStatusType(TodoStatusType.All)"
+           href="#/">all</a>
+      </li>
+      <li>
+        <a [class.selected]="nowTodoStatusType === TodoStatusType.Active"
+           (click)="setTodoStatusType(TodoStatusType.Active)"
+           href="#/active">Active</a>
+      </li>
+      <li>
+        <a [class.selected]="nowTodoStatusType === TodoStatusType.Completed"
+           (click)="setTodoStatusType(TodoStatusType.Completed)"
+           href="#/completed">Completed</a>
+      </li>
+    </ul>
+     @if (todoCompleted.length) {
+      <button 
+        (click)="clearCompleted()">clear completed</button>
+     }
+  </footer>
 </section>
