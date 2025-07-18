@@ -3,9 +3,8 @@
     <h1>{{title}}</h1>
     <input 
         #todoInput 
-        class="new-todo" 
-        (keyup.enter)="add(todoInput.value); 
-        todoInput.value = ''"
+        [(ngModel)]="todoInputModel"
+        (keyup.enter)="add()"
         [placeholder]="placeholder" 
         (mouseenter)="todoInput.focus()"
         autofocus>
@@ -20,7 +19,7 @@
       Mark all as complete
     </label>
     <ul>
-      @for (item of nowToddoList; track $index) {
+      @for (item of nowTodoList; track $index) {
       <li 
         [class]="{
           completed: item.Status,
@@ -44,9 +43,9 @@
       @if (item.Editing) {
       <input  
             #ItemInput
-            [value]="item.Thing"
-            (keyup.enter)="update(item, ItemInput.value)"
-            (blur)="update(item, ItemInput.value)"
+            [(ngModel)]="item.Thing"
+            (keyup.enter)="update(item)"
+            (blur)="update(item)"
             (mouseenter)="ItemInput.focus()"
             type="text"
           />
